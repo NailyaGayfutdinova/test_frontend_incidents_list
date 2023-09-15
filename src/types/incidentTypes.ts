@@ -7,3 +7,9 @@ export type IncidentType = {
   assignee: string;
   isRead: boolean;
 };
+
+export type IncidentSliceType = {
+  incidentsViewOption: string;
+  incidentList: IncidentType[];
+  selectedIncident: null | IncidentType;
+}

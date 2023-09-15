@@ -1,19 +1,31 @@
-import React from "react";
-import { IncidentType } from "../../types/incidentTypes";
+import React, { useState } from "react";
 import OneIncidentCard from "./OneIncidentCard";
+import { Paginator } from "primereact/paginator";
+import { useAppSelector } from "../../hooks/reduxHooks";
 
-type IncidentsCardsPropsType = {
-  incidentsList: IncidentType[];
-};
+export default function IncidentsCards(): JSX.Element {
+  const incidentList = useAppSelector(store => store.incidents.incidentList);
 
-export default function IncidentsCards({
-  incidentsList,
-}: IncidentsCardsPropsType): JSX.Element {
+  const [first, setFirst] = useState(0);
+  const [rows, setRows] = useState(10);
+
   return (
-    <div className="card-container flex flex-wrap gap-2 justify-content-around">
-      {incidentsList.map((oneIncident) => (
-        <OneIncidentCard key={oneIncident.id} oneIncident={oneIncident} />
-      ))}
-    </div>
+    <>
+      <div className="flex flex-wrap gap-3 justify-content-center">
+        {incidentList.slice(first, first + rows).map((oneIncident) => (
+          <OneIncidentCard key={`${oneIncident.id}_${oneIncident.isRead}`} oneIncident={oneIncident} />
+        ))}
+      </div>
+        <Paginator
+          first={first}
+          rows={rows}
+          totalRecords={incidentList.length}
+          rowsPerPageOptions={[3, 5, 10, 15, 20]}
+          onPageChange={(e) => {
+            setFirst(e.first);
+            setRows(e.rows);
+          }}
+        />
+    </>
   );
 }

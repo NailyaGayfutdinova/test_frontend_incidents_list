@@ -1,29 +1,30 @@
-import React from "react";
-import useIncidentHook from "../../hooks/useIncidentHook";
+import React, { useEffect } from "react";
 import IncidentsTable from "./IncidentsTable";
-import { IncidentType } from "../../types/incidentTypes";
 import IncidentsCards from "./IncidentsCards";
-import { FilterMatchMode } from "primereact/api";
-import { viewOptions } from "../../data/incidentsData";
+import { viewOptions } from "../../data/constants";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { addNewIncident } from "../../redux/incidentSlice";
+import createNewIncident from "../../data/incidentsData";
 
-type ContentContainerPropsType = {
-  view: string;
-  incidentsList: IncidentType[];
-};
+export default function ContentContainer(): JSX.Element {
+  const incidentList = useAppSelector((store) => store.incidents.incidentList);
+  const incidentsViewOption = useAppSelector(
+    (store) => store.incidents.incidentsViewOption
+  );
+  const dispatch = useAppDispatch();
 
-export default function ContentContainer({
-  view,
-  incidentsList,
-}: ContentContainerPropsType): JSX.Element {
-
-  const { searchText } = useIncidentHook();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      dispatch(addNewIncident(createNewIncident(incidentList)));
+    }, 10000);
+    // console.log('поменялся incidentList', incidentsList);
+    return () => clearTimeout(timer);
+  }, [incidentList, dispatch]);
 
   return (
-    <div className="mt-3">
-      {view === viewOptions[0] && (
-        <IncidentsTable incidentsList={incidentsList} searchText={searchText} />
-      )}
-      {view === viewOptions[1] && <IncidentsCards incidentsList={incidentsList} />}
+    <div className="pt-3">
+      {incidentsViewOption === viewOptions[0] && <IncidentsTable />}
+      {incidentsViewOption === viewOptions[1] && <IncidentsCards />}
     </div>
   );
 }

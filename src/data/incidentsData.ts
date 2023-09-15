@@ -82,5 +82,3 @@ export default function createNewIncident(arr: IncidentType[]): IncidentType {
   };
   return newIncident;
 }
-
-export const viewOptions = ["Таблица", "Карточки"];
