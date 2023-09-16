@@ -6,6 +6,9 @@ const initialState: IncidentSliceType = {
   incidentsViewOption: "Таблица",
   incidentList: [],
   selectedIncident: null,
+  showFiltered: false,
+  searchInput: "",
+  searchingIncidents: [],
 };
 
 const incidentSlice = createSlice({
@@ -28,29 +31,38 @@ const incidentSlice = createSlice({
       state.incidentList = state.incidentList.map((el) =>
         el.id !== action.payload ? el : { ...el, isRead: !el.isRead }
       );
+      state.searchingIncidents = state.searchingIncidents.map((el) =>
+      el.id !== action.payload ? el : { ...el, isRead: !el.isRead }
+    );
       state.selectedIncident = null;
     },
 
-    //   setAllPosts(state, action: PayloadAction<PostType[]>) {
-    //     console.log('-----',action.payload);
-    //     return action.payload
-    //   },
+    setSearchInput(state, action: PayloadAction<string>) {
+      console.log('slice', action.payload);
+      state.searchInput = action.payload;
+    },
 
-    //   addNewPost(state, action: PayloadAction<PostType>) {
-    //     state.push(action.payload);
-    //   },
+    setSearchingIncidents(state, action: PayloadAction<string>) {
+      state.searchingIncidents = state.incidentList.filter((el) =>
+        el.message.toLowerCase().includes(action.payload.toLowerCase())
+      );
+    },
 
-    //   deleteOnePost(state, action: PayloadAction<number>) {
-    //     const ind = state.findIndex((el) => el.id === action.payload);
-    //     if (ind) {
-    //       state.splice(ind, 1);
-    //     }
-    //   },
+    setShowFiltered(state, action: PayloadAction<boolean>) {
+      state.showFiltered = action.payload;
+    },
   },
 });
 
 const incidentReduser = incidentSlice.reducer;
-export const { selectViewOption, addNewIncident, selectIncident, changeReadStatus } =
-  incidentSlice.actions;
+export const {
+  selectViewOption,
+  addNewIncident,
+  selectIncident,
+  changeReadStatus,
+  setSearchInput,
+  setSearchingIncidents,
+  setShowFiltered,
+} = incidentSlice.actions;
 
 export default incidentReduser;

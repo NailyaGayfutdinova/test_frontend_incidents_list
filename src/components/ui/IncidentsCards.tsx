@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import OneIncidentCard from "./OneIncidentCard";
 import { Paginator } from "primereact/paginator";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { IncidentType } from "../../types/incidentTypes";
 
-export default function IncidentsCards(): JSX.Element {
-  const incidentList = useAppSelector(store => store.incidents.incidentList);
-
+export default function IncidentsCards({ incidentList }: { incidentList: IncidentType[]}): JSX.Element {
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
 

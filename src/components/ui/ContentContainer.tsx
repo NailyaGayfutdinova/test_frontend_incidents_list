@@ -7,10 +7,12 @@ import { addNewIncident } from "../../redux/incidentSlice";
 import createNewIncident from "../../data/incidentsData";
 
 export default function ContentContainer(): JSX.Element {
-  const incidentList = useAppSelector((store) => store.incidents.incidentList);
   const incidentsViewOption = useAppSelector(
     (store) => store.incidents.incidentsViewOption
   );
+  const incidentList = useAppSelector((store) => store.incidents.incidentList);
+  const searchingIncidents = useAppSelector(store => store.incidents.searchingIncidents);
+  const showFiltered = useAppSelector(store => store.incidents.showFiltered);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -22,8 +24,8 @@ export default function ContentContainer(): JSX.Element {
 
   return (
     <div className="pt-3">
-      {incidentsViewOption === viewOptions[0] && <IncidentsTable />}
-      {incidentsViewOption === viewOptions[1] && <IncidentsCards />}
+      {incidentsViewOption === viewOptions[0] && <IncidentsTable incidentList={showFiltered ? searchingIncidents : incidentList} />}
+      {incidentsViewOption === viewOptions[1] && <IncidentsCards incidentList={showFiltered ? searchingIncidents : incidentList} />}
     </div>
   );
 }

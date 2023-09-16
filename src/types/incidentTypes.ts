@@ -12,4 +12,7 @@ export type IncidentSliceType = {
   incidentsViewOption: string;
   incidentList: IncidentType[];
   selectedIncident: null | IncidentType;
+  showFiltered: boolean;
+  searchInput: string;
+  searchingIncidents: IncidentType[];
 }

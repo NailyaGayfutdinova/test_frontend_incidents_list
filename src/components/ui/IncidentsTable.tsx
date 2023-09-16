@@ -8,8 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { IncidentType } from "../../types/incidentTypes";
 import { changeReadStatus, selectIncident } from "../../redux/incidentSlice";
 
-export default function IncidentsTable(): JSX.Element {
-  const incidentList = useAppSelector((store) => store.incidents.incidentList);
+export default function IncidentsTable({ incidentList }: { incidentList: IncidentType[]}): JSX.Element {
   const selectedIncident = useAppSelector(
     (store) => store.incidents.selectedIncident
   );
