@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { SelectButton } from "primereact/selectbutton";
 import { InputText } from "primereact/inputtext";
 import { Toolbar } from "primereact/toolbar";
-import { viewOptions } from "../../data/constants";
+import { viewOptions } from "../../data/incidentsConstants";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { useDispatch } from "react-redux";
 import {
@@ -20,6 +20,7 @@ export default function SearchBar(): JSX.Element {
   const searchInput = useAppSelector((store) => store.incidents.searchInput);
   const dispatch = useDispatch();
 
+  // динамический поиск с дебаунс эффектом
   useEffect(() => {
     if (searchInput.trim()) {
       const searchTimer = setTimeout(() => {
@@ -36,6 +37,7 @@ export default function SearchBar(): JSX.Element {
     }
   }, [searchInput, dispatch]);
 
+  // выбор вида просмотра (таблица или карточки)
   const startContent = (
     <React.Fragment>
       <SelectButton
@@ -49,6 +51,7 @@ export default function SearchBar(): JSX.Element {
     </React.Fragment>
   );
 
+  // поисковая строка
   const endContent = (
     <React.Fragment>
       <div className="p-input-icon-left">

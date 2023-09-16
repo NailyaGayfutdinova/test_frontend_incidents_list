@@ -14,9 +14,9 @@ export default function OneIncidentCard({
     (store) => store.incidents.selectedIncident
   );
   const dispatch = useAppDispatch();
-
+  
+  // цвет записи в зависимости от уровня важности сообщения
   let importanceColor;
-
   switch (oneIncident.importance) {
     case "низкая":
       importanceColor = "text-green-500";
@@ -33,7 +33,11 @@ export default function OneIncidentCard({
     default:
       importanceColor = "";
   }
+
+  // цвет карточки в зависимости от того, прочитано ли сооббщение
   const cardColor = oneIncident.isRead ? "bg-white" : "bg-red-50";
+
+  // границы карточки, в зависимости от того, выбрана ли она
   const cardBorder =
     selectedIncident && oneIncident.id === selectedIncident.id
       ? "border-3"
@@ -51,8 +55,8 @@ export default function OneIncidentCard({
       }}
       onClick={(e) => {
         if (!selectedIncident || oneIncident.id !== selectedIncident.id)
-          dispatch(selectIncident(oneIncident));
-        else dispatch(selectIncident(null));
+          dispatch(selectIncident(oneIncident)); // выбор карточки
+        else dispatch(selectIncident(null));  // отмена выбора (если на выбранную карточку нажать повторно)
       }}
     >
       <div className="flex flex-column p-1">

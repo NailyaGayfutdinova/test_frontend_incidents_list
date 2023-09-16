@@ -38,7 +38,6 @@ const incidentSlice = createSlice({
     },
 
     setSearchInput(state, action: PayloadAction<string>) {
-      console.log("slice", action.payload);
       state.searchInput = action.payload;
     },
 

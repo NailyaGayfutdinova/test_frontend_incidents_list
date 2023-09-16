@@ -1,8 +1,7 @@
-import { IncidentType } from "../types/incidentTypes";
-import { format } from "date-fns";
+export const viewOptions = ["Таблица", "Карточки"];
 
 // моковые данные по возможным инцидентам
-const incidents = [
+export const incidents = [
   {
     equipment: "Вегас",
     message: "Сервер Вегас не доступен",
@@ -55,7 +54,7 @@ const incidents = [
 ];
 
 // моковые данные по ответственным за определенное оборудование
-const assignee = [
+export const assignee = [
   { equipment: "Вегас", assignee: "Смирнов В.А." },
   { equipment: "Коммутатор", assignee: "Иванов И.И." },
   { equipment: "Люк", assignee: "Петров П.П." },
@@ -66,26 +65,3 @@ const assignee = [
   { equipment: "Сервер", assignee: "Павлов П.П." },
   { equipment: "Свич", assignee: "Федоров Ф.Ф." },
 ];
-
-/* 
-* Функция, которая генерирует новые инциденты
-* @param {number} num - общее количество уже имеющихся в массиве инцидентов (для определения порядкового номера)
-* @return {IncidentType} newIncident - новый инцидент 
-*/
-export default function createNewIncident(num: number): IncidentType {
-  const randomIndex = Math.round(Math.random() * (incidents.length - 1));
-  const randomIncident = incidents[randomIndex];
-  const person = assignee.find(
-    (el) => el.equipment === randomIncident.equipment
-  )?.assignee;
-  const newIncident = {
-    id: num + 1,
-    createdAt: format(new Date(), "dd.MM.yyyy HH:mm:ss"),
-    importance: randomIncident.importance,
-    equipment: randomIncident.equipment,
-    message: randomIncident.message,
-    assignee: person ? person : "не назначен",
-    isRead: false,
-  };
-  return newIncident;
-}

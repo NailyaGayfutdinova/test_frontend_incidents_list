@@ -7,16 +7,7 @@ import { Column } from "primereact/column";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { IncidentType } from "../../types/incidentTypes";
 import { changeReadStatus, selectIncident } from "../../redux/incidentSlice";
-import {
-  headerHeightMax,
-  headerHeightMin,
-  paginatorHeight,
-  tableFirstRowHeight,
-  tableRowHeightAv,
-  tableRowHeightMin,
-  windowWidthLarge,
-  windowwidthMedium,
-} from "../../data/constants";
+import { calculateTableRows } from "../../data/sizeFunctions";
 
 export default function IncidentsTable({
   incidentList,
@@ -30,55 +21,28 @@ export default function IncidentsTable({
   const [tableRows, setTableRows] = useState(1);
   const dispatch = useAppDispatch();
 
-  const renderIsRead = (rowData: IncidentType) => {
-    return <span>{rowData.isRead ? "прочитано" : "не прочитано"}</span>;
+  // функция для определения текста статуса (прочтано ли сообщение)
+  const getStatusText = (isRead: boolean) => {
+    return isRead ? "прочитано" : "не прочитано";
   };
 
+  // расчет количества строк таблицы, которые будут представлены на странице первоначально
   useEffect(() => {
-    if (windowSize.width > windowWidthLarge)
-      setTableRows(
-        Math.floor(
-          (windowSize.height -
-            headerHeightMin -
-            tableFirstRowHeight -
-            paginatorHeight) /
-            tableRowHeightMin
-        ) || 1
-      );
-    else if (windowSize.width > windowwidthMedium)
-      setTableRows(
-        Math.floor(
-          (windowSize.height -
-            headerHeightMin -
-            tableFirstRowHeight -
-            paginatorHeight) /
-            tableRowHeightAv
-        ) || 1
-      );
-    else
-      setTableRows(
-        Math.floor(
-          (windowSize.height -
-            headerHeightMax -
-            tableFirstRowHeight -
-            paginatorHeight) /
-            tableRowHeightAv
-        ) || 1
-      );
+    setTableRows(calculateTableRows(windowSize));
   }, [windowSize]);
 
   return (
     <DataTable
       value={incidentList}
-      sortMode="multiple"
-      removableSort
+      sortMode="multiple" // возможность сортировки по нескольким столбцам в порядке выбора (при удерживании ctrl)
+      removableSort // возможность отмены сортировки
       paginator
       rows={tableRows}
       rowsPerPageOptions={[3, 5, 10, 15, tableRows]
         .filter((el, index, arr) => arr.indexOf(el) === index)
         .sort((a, b) => a - b)}
       rowClassName={(rowData) => (rowData.isRead ? "bg-white" : "bg-red-50")}
-      selectionMode="single"
+      selectionMode="single" // возможность выбора единственной строки
       selection={selectedIncident}
       onSelectionChange={(
         e: DataTableSelectionSingleChangeEvent<IncidentType[]>
@@ -88,7 +52,7 @@ export default function IncidentsTable({
       onKeyDown={(e) => {
         if (e.key === " " && selectedIncident) {
           e.preventDefault();
-          dispatch(changeReadStatus(selectedIncident.id));
+          dispatch(changeReadStatus(selectedIncident.id)); // изменение статуса прочтения сообщения по нажатию на пробел
         }
       }}
     >
@@ -97,7 +61,12 @@ export default function IncidentsTable({
       <Column field="equipment" header="Оборудование" sortable />
       <Column field="message" header="Сообщение" sortable />
       <Column field="assignee" header="Ответственный" sortable />
-      <Column field="isRead" header="Статус" body={renderIsRead} sortable />
+      <Column
+        field="isRead"
+        header="Статус"
+        body={(rowData: IncidentType) => getStatusText(rowData.isRead)}
+        sortable
+      />
     </DataTable>
   );
 }
