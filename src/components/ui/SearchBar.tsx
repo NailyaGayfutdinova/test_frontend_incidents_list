@@ -62,7 +62,7 @@ export default function SearchBar(): JSX.Element {
   );
 
   return (
-    <div className="header">
+    <div className="header pb-3">
       <Toolbar start={startContent} end={endContent} />
     </div>
   );

@@ -1,8 +1,16 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import OneIncidentCard from "./OneIncidentCard";
 import { Paginator } from "primereact/paginator";
 import { IncidentType } from "../../types/incidentTypes";
 import { useAppSelector } from "../../hooks/reduxHooks";
+import {
+  cardHeight,
+  cardWidth,
+  headerHeightMax,
+  headerHeightMin,
+  paginatorHeight,
+  windowwidthMedium,
+} from "../../data/constants";
 
 export default function IncidentsCards({
   incidentList,
@@ -15,16 +23,20 @@ export default function IncidentsCards({
   const windowSize = useAppSelector((store) => store.windowSize);
 
   useEffect(() => {
-    if (windowSize.width > 550) {
+    if (windowSize.width > windowwidthMedium) {
       const quantity =
-        (Math.floor(windowSize.width / 340) || 1) *
-        (Math.floor((windowSize.height - 180) / 106) || 1);
+        (Math.floor(windowSize.width / cardWidth) || 1) *
+        (Math.floor(
+          (windowSize.height - headerHeightMin - paginatorHeight) / cardHeight
+        ) || 1);
       setCardQuantity(quantity);
       setRows(quantity);
     } else {
       const quantity =
-        (Math.floor(windowSize.width / 340) || 1) *
-        (Math.floor((windowSize.height - 349) / 106) || 1);
+        (Math.floor(windowSize.width / cardWidth) || 1) *
+        (Math.floor(
+          (windowSize.height - headerHeightMax - paginatorHeight) / cardHeight
+        ) || 1);
       setCardQuantity(quantity);
       setRows(quantity);
     }

@@ -27,12 +27,12 @@ export default function ContentContainer(): JSX.Element {
   useEffect(() => {
     const timer = setTimeout(() => {
       dispatch(addNewIncident(createNewIncident(incidentList.length)));
-    }, 10000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [incidentList, dispatch]);
 
   return (
-    <div className="pt-3">
+    <div>
       {incidentsViewOption === viewOptions[0] && <IncidentsTable incidentList={showFiltered ? searchingIncidents : incidentList} />}
       {incidentsViewOption === viewOptions[1] && <IncidentsCards incidentList={showFiltered ? searchingIncidents : incidentList} />}
     </div>

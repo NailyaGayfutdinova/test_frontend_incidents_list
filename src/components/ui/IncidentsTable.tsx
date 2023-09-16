@@ -7,6 +7,16 @@ import { Column } from "primereact/column";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { IncidentType } from "../../types/incidentTypes";
 import { changeReadStatus, selectIncident } from "../../redux/incidentSlice";
+import {
+  headerHeightMax,
+  headerHeightMin,
+  paginatorHeight,
+  tableFirstRowHeight,
+  tableRowHeightAv,
+  tableRowHeightMin,
+  windowWidthLarge,
+  windowwidthMedium,
+} from "../../data/constants";
 
 export default function IncidentsTable({
   incidentList,
@@ -25,9 +35,36 @@ export default function IncidentsTable({
   };
 
   useEffect(() => {
-    if (windowSize.width > 1120) setTableRows(Math.floor((windowSize.height - 210) / 53) || 1);
-    else if (windowSize.width > 550) setTableRows(Math.floor((windowSize.height - 210) / 80) || 1);
-    else setTableRows(Math.floor((windowSize.height - 340) / 80) || 1);
+    if (windowSize.width > windowWidthLarge)
+      setTableRows(
+        Math.floor(
+          (windowSize.height -
+            headerHeightMin -
+            tableFirstRowHeight -
+            paginatorHeight) /
+            tableRowHeightMin
+        ) || 1
+      );
+    else if (windowSize.width > windowwidthMedium)
+      setTableRows(
+        Math.floor(
+          (windowSize.height -
+            headerHeightMin -
+            tableFirstRowHeight -
+            paginatorHeight) /
+            tableRowHeightAv
+        ) || 1
+      );
+    else
+      setTableRows(
+        Math.floor(
+          (windowSize.height -
+            headerHeightMax -
+            tableFirstRowHeight -
+            paginatorHeight) /
+            tableRowHeightAv
+        ) || 1
+      );
   }, [windowSize]);
 
   return (
