@@ -5,18 +5,22 @@ import { Toolbar } from "primereact/toolbar";
 import { viewOptions } from "../../data/constants";
 import { useAppSelector } from "../../hooks/reduxHooks";
 import { useDispatch } from "react-redux";
-import { selectViewOption } from "../../redux/incidentSlice";
+import { selectIncident, selectViewOption } from "../../redux/incidentSlice";
 
 export default function SearchBar(): JSX.Element {
-  const incidentsViewOption = useAppSelector(store => store.incidents.incidentsViewOption);
-  // const { searchHandler } = useIncidentHook();
+  const incidentsViewOption = useAppSelector(
+    (store) => store.incidents.incidentsViewOption
+  );
   const dispatch = useDispatch();
 
   const startContent = (
     <React.Fragment>
       <SelectButton
         value={incidentsViewOption}
-        onChange={(e) => dispatch(selectViewOption(e.value))}
+        onChange={(e) => {
+          dispatch(selectViewOption(e.value));
+          dispatch(selectIncident(null));
+        }}
         options={viewOptions}
       />
     </React.Fragment>
@@ -26,10 +30,7 @@ export default function SearchBar(): JSX.Element {
     <React.Fragment>
       <div className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText
-          // onInput={(e) => searchHandler(e)}
-          placeholder="Поиск..."
-        />
+        <InputText placeholder="Поиск..." />
       </div>
     </React.Fragment>
   );

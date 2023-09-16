@@ -44,7 +44,10 @@ export default function OneIncidentCard({
       className={`flex flex-row flex-wrap text-xs border-gray-300 p-1 align-items-center ${cardColor} ${cardBorder}`}
       tabIndex={oneIncident.id}
       onKeyDown={(e) => {
-        if (e.key === " ") dispatch(changeReadStatus(oneIncident.id));
+        if (e.key === " ") {
+          e.preventDefault();
+          dispatch(changeReadStatus(oneIncident.id));
+        }
       }}
       onClick={(e) => {
         if (!selectedIncident || oneIncident.id !== selectedIncident.id)

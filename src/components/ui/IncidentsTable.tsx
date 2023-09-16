@@ -1,18 +1,22 @@
 import React from "react";
-import { DataTable } from "primereact/datatable";
+import {
+  DataTable,
+  DataTableSelectionSingleChangeEvent,
+} from "primereact/datatable";
 import { Column } from "primereact/column";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { IncidentType } from "../../types/incidentTypes";
+import { changeReadStatus, selectIncident } from "../../redux/incidentSlice";
 
 export default function IncidentsTable(): JSX.Element {
   const incidentList = useAppSelector((store) => store.incidents.incidentList);
-  // const { filters } = useIncidentHook();
-  // console.log(filters.global.value);
+  const selectedIncident = useAppSelector(
+    (store) => store.incidents.selectedIncident
+  );
+  const dispatch = useAppDispatch();
 
   const renderIsRead = (rowData: IncidentType) => {
-    return (
-      <span>{rowData.isRead ? "прочитано" : "не прочитано"}</span>
-    );
+    return <span>{rowData.isRead ? "прочитано" : "не прочитано"}</span>;
   };
 
   return (
@@ -24,6 +28,20 @@ export default function IncidentsTable(): JSX.Element {
       rows={10}
       rowsPerPageOptions={[3, 5, 10, 15, 20]}
       rowClassName={(rowData) => (rowData.isRead ? "bg-white" : "bg-red-50")}
+      selectionMode="single"
+      selection={selectedIncident}
+      onSelectionChange={(
+        e: DataTableSelectionSingleChangeEvent<IncidentType[]>
+      ) => dispatch(selectIncident(e.value || null))}
+      dataKey="id"
+      metaKeySelection={false}
+      onKeyDown={(e) => {
+        if (e.key === " " && selectedIncident) {
+          e.preventDefault();
+          dispatch(changeReadStatus(selectedIncident.id));
+        }
+      }}
+      style={{ color: "black" }}
     >
       <Column field="createdAt" header="Дата" sortable />
       <Column field="importance" header="Важность" sortable />

@@ -17,7 +17,6 @@ export default function ContentContainer(): JSX.Element {
     const timer = setTimeout(() => {
       dispatch(addNewIncident(createNewIncident(incidentList)));
     }, 10000);
-    // console.log('поменялся incidentList', incidentsList);
     return () => clearTimeout(timer);
   }, [incidentList, dispatch]);
 
