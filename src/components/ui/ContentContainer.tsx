@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import IncidentsTable from "./IncidentsTable";
 import IncidentsCards from "./IncidentsCards";
 import { viewOptions } from "../../data/constants";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { addNewIncident } from "../../redux/incidentSlice";
 import createNewIncident from "../../data/incidentsData";
+import { setWindowSize } from "../../redux/sizeSlice";
 
 export default function ContentContainer(): JSX.Element {
   const incidentsViewOption = useAppSelector(
@@ -15,9 +16,17 @@ export default function ContentContainer(): JSX.Element {
   const showFiltered = useAppSelector(store => store.incidents.showFiltered);
   const dispatch = useAppDispatch();
 
+  useLayoutEffect(() => {
+    const size = {
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+    };
+    dispatch(setWindowSize(size));
+  }, [dispatch]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      dispatch(addNewIncident(createNewIncident(incidentList)));
+      dispatch(addNewIncident(createNewIncident(incidentList.length)));
     }, 10000);
     return () => clearTimeout(timer);
   }, [incidentList, dispatch]);

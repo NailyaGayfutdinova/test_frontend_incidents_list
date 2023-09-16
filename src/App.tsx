@@ -3,9 +3,7 @@ import IncidentPage from "./components/pages/IncidentPage";
 
 function App() {
 
-  return (
-      <IncidentPage />
-  );
+  return <IncidentPage />;
 }
 
 export default App;

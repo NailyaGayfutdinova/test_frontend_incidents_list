@@ -1,5 +1,5 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { IncidentSliceType, IncidentType } from "../types/incidentTypes";
 
 const initialState: IncidentSliceType = {
@@ -20,7 +20,7 @@ const incidentSlice = createSlice({
     },
 
     addNewIncident(state, action: PayloadAction<IncidentType>) {
-      state.incidentList.push(action.payload);
+      state.incidentList = [...state.incidentList, action.payload];
     },
 
     selectIncident(state, action: PayloadAction<IncidentType | null>) {
@@ -32,13 +32,13 @@ const incidentSlice = createSlice({
         el.id !== action.payload ? el : { ...el, isRead: !el.isRead }
       );
       state.searchingIncidents = state.searchingIncidents.map((el) =>
-      el.id !== action.payload ? el : { ...el, isRead: !el.isRead }
-    );
+        el.id !== action.payload ? el : { ...el, isRead: !el.isRead }
+      );
       state.selectedIncident = null;
     },
 
     setSearchInput(state, action: PayloadAction<string>) {
-      console.log('slice', action.payload);
+      console.log("slice", action.payload);
       state.searchInput = action.payload;
     },
 
@@ -54,7 +54,7 @@ const incidentSlice = createSlice({
   },
 });
 
-const incidentReduser = incidentSlice.reducer;
+const incidentReducer = incidentSlice.reducer;
 export const {
   selectViewOption,
   addNewIncident,
@@ -65,4 +65,4 @@ export const {
   setShowFiltered,
 } = incidentSlice.actions;
 
-export default incidentReduser;
+export default incidentReducer;

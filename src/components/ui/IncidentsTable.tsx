@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DataTable,
   DataTableSelectionSingleChangeEvent,
@@ -8,15 +8,27 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { IncidentType } from "../../types/incidentTypes";
 import { changeReadStatus, selectIncident } from "../../redux/incidentSlice";
 
-export default function IncidentsTable({ incidentList }: { incidentList: IncidentType[]}): JSX.Element {
+export default function IncidentsTable({
+  incidentList,
+}: {
+  incidentList: IncidentType[];
+}): JSX.Element {
   const selectedIncident = useAppSelector(
     (store) => store.incidents.selectedIncident
   );
+  const windowSize = useAppSelector((store) => store.windowSize);
+  const [tableRows, setTableRows] = useState(1);
   const dispatch = useAppDispatch();
 
   const renderIsRead = (rowData: IncidentType) => {
     return <span>{rowData.isRead ? "прочитано" : "не прочитано"}</span>;
   };
+
+  useEffect(() => {
+    if (windowSize.width > 1120) setTableRows(Math.floor((windowSize.height - 210) / 53) || 1);
+    else if (windowSize.width > 550) setTableRows(Math.floor((windowSize.height - 210) / 80) || 1);
+    else setTableRows(Math.floor((windowSize.height - 340) / 80) || 1);
+  }, [windowSize]);
 
   return (
     <DataTable
@@ -24,8 +36,10 @@ export default function IncidentsTable({ incidentList }: { incidentList: Inciden
       sortMode="multiple"
       removableSort
       paginator
-      rows={10}
-      rowsPerPageOptions={[3, 5, 10, 15, 20]}
+      rows={tableRows}
+      rowsPerPageOptions={[3, 5, 10, 15, tableRows]
+        .filter((el, index, arr) => arr.indexOf(el) === index)
+        .sort((a, b) => a - b)}
       rowClassName={(rowData) => (rowData.isRead ? "bg-white" : "bg-red-50")}
       selectionMode="single"
       selection={selectedIncident}
@@ -40,7 +54,6 @@ export default function IncidentsTable({ incidentList }: { incidentList: Inciden
           dispatch(changeReadStatus(selectedIncident.id));
         }
       }}
-      style={{ color: "black" }}
     >
       <Column field="createdAt" header="Дата" sortable />
       <Column field="importance" header="Важность" sortable />

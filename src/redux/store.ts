@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import incidentReducer from './incidentSlice'
+import sizeReducer from './sizeSlice'
 
 export const store = configureStore({
   reducer: {
     incidents: incidentReducer,
+    windowSize: sizeReducer,
   },
 })
 

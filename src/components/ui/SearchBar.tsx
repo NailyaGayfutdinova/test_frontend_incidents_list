@@ -21,10 +21,8 @@ export default function SearchBar(): JSX.Element {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("useeffect");
     if (searchInput.trim()) {
       const searchTimer = setTimeout(() => {
-        console.log("поиск");
         dispatch(setSearchingIncidents(searchInput));
         dispatch(setShowFiltered(true));
       }, 300);
@@ -64,7 +62,7 @@ export default function SearchBar(): JSX.Element {
   );
 
   return (
-    <div className="card">
+    <div className="header">
       <Toolbar start={startContent} end={endContent} />
     </div>
   );
